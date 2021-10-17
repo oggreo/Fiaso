@@ -1,8 +1,11 @@
 <template>
-  <label v-if="label">{{ label }}</label>
+  <label
+    class="mr-4 font-medium"
+    v-if="label">{{ label }}</label>
   <select
     :value="modelValue"
-    class="field"
+    class="field mr-1 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white
+           border border-blue-500 hover:border-transparent rounded"
     v-bind="{
       ...$attrs,
       // Making v-model capable

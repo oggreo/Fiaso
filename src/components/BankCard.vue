@@ -1,30 +1,34 @@
 <template>
-  <div class="card">
+  <div class="max-w-md py-4 px-8 bg-white shadow-lg rounded-lg my-20">
+    <div class="flex justify-center md:justify-end -mt-16">
+      <img class="w-20 h-20 object-cover rounded-full border-2 border-white-500"
+           src="../assets/pound.svg">
+    </div>
     <div class="bank-info">
-      <div class="bank-name">
+      <div class="bank-name text-gray-800 text-xl font-semibold">
         {{ card.name }}
       </div>
-      <div class="bank-balance">
+      <div class="bank-balance text-gray-800 text-base">
         {{ card.currency }}
-        {{ card.amount }}
+        {{ getBankBalance }}
       </div>
     </div>
     <div class="converted-amount">
-      <div class="amount">
+      <div class="amount text-gray-800 text-2xl font-semibold">
         {{ getCurrencySymbol }}
         {{ getConvertedAmount }}
       </div>
-      <div class="conversion-rate">
+      <div class="conversion-rate text-gray-800 text-xs">
         <text> 1 {{ card.currency }} = {{ this.rate }} {{ this.mainCurrency }} </text>
       </div>
     </div>
-    <div class="update">
+    <div class="update text-indigo-800 font-medium font-semibold">
       <text> Update </text>
     </div>
-    <div class="delete">
+    <div class="delete text-indigo-800">
       <button
         @click="deleteBank(card.id)"
-      >Delete</button>
+      >🗑️</button>
     </div>
   </div>
 
@@ -74,6 +78,12 @@ export default {
   },
   methods: {
     deleteBank(id) {
+      for (let i = 0; i < this.GStore.length; i += 1) {
+        const card = this.GStore[i];
+        if (card.id === this.card.id) {
+          this.GStore.splice(i, 1);
+        }
+      }
       this.$store.commit('DELETE_BANK', { id });
     },
   },
@@ -101,9 +111,13 @@ export default {
       });
   },
   computed: {
+    getBankBalance() {
+      return this.card.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
     getConvertedAmount() {
-      const convertedAmount = this.card.amount * this.rate;
-      return (Math.round(convertedAmount * 100) / 100).toFixed(2);
+      let convertedAmount = this.card.amount * this.rate;
+      convertedAmount = (Math.round(convertedAmount * 100) / 100).toFixed(2);
+      return convertedAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
     getCurrencySymbol() {
       let symbol = '';

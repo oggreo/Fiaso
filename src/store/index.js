@@ -20,7 +20,7 @@ export default createStore({
     },
     DELETE_BANK(state, { id }) {
       const targetIndex = state.balance.cards.findIndex((card) => card.id === id);
-      state.balance.cards.splice(targetIndex);
+      state.balance.cards.splice(targetIndex, 1);
     },
   },
   actions: {
