@@ -8,5 +8,6 @@ const GStore = reactive([]);
 
 createApp(App)
   .provide('GStore', GStore)
-  .use(store).use(router)
+  .use(store)
+  .use(router)
   .mount('#app');

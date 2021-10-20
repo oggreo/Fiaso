@@ -2,14 +2,14 @@
   <div class="account-main flex flex-col space-between ml-10 mr-10">
     <div class="greeting flex flex-row justify-between">
       <h1 class="mb-5 pb-2 text-2xl font-black leading-7 text-gray-900 sm:text-3xl sm:truncate">
-       Welcome back!👋
+        Welcome back!👋
       </h1>
       <div class="select-main-currency">
-         <BaseSelect
-           :options="this.options"
-           v-model="this.mainCurrency"
-           label="Select main currency"
-           />
+        <BaseSelect
+          :options="this.options"
+          v-model="this.mainCurrency"
+          label="Select main currency"
+        />
       </div>
     </div>
     <div class="account-info flex flex-row justify-between jus">
@@ -20,67 +20,66 @@
         > Total balance {{ getCurrentDateTime }}</p>
       </div>
       <div class="edit-account-info">
-
         <div class="add-new-bank">
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="show-modal" @click="showModal = true">
-          + Add new
-        </button>
-        <transition name="modal">
-          <BaseForm v-if="showModal" @close="showModal=false">
-          <template v-slot:header>
-            <h3 class="font-semibold">Add new bank </h3>
-          </template>
-          <template v-slot:body>
-            <form
-              @submit.prevent
-              @submit="createNewBank(newBank)"
-            >
-            <div class="add-bank-form">
-              <div class="flex flex-row justify-between">
-                <BaseInput
-                  label="Bank Name"
-                  type="text"
-                  v-model="newBank.name"
-                />
-              </div>
-              <div class="flex flex-row justify-between">
-                <BaseInput
-                  label="Amount"
-                  type="text"
-                  v-model="newBank.amount"
-                />
-              </div>
-              <div class="flex flex-row justify-start">
-                <BaseSelect
-                   :options="this.options"
-                   v-model="newBank.currency"
-                   label="Select main currency"
-                 />
-              </div>
-              <div class="flex flex-row mt-5 justify-around">
-                <button type="submit"
-                        class="modal-default-button bg-transparent hover:bg-blue-500 text-blue-700
-                               font-semibold hover:text-white py-1 px-2 border border-blue-500
-                               hover:border-transparent rounded"
-                        @click="showModal=false">
-                  Submit
-                </button>
-                <button type="button"
-                        class="modal-default-button bg-transparent hover:bg-blue-500 text-blue-700
-                               font-semibold hover:text-white py-1 px-2 border border-blue-500
-                               hover:border-transparent rounded"
-                        @click="showModal=false">
-                  Cancel
-                </button>
-              </div>
-            </div>
-            </form>
-          </template>
-        </BaseForm>
-        </transition>
-      </div>
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+            id="show-modal" @click="showModal = true">
+            + Add new
+          </button>
+          <transition name="modal">
+            <BaseForm v-if="showModal" @close="showModal=false">
+              <template v-slot:header>
+                <h3 class="font-semibold">Add new bank </h3>
+              </template>
+              <template v-slot:body>
+                <form
+                  @submit.prevent
+                  @submit="createNewBank(newBank)"
+                >
+                  <div class="add-bank-form">
+                    <div class="flex flex-row justify-between">
+                      <BaseInput
+                        label="Bank Name"
+                        type="text"
+                        v-model="newBank.name"
+                      />
+                    </div>
+                    <div class="flex flex-row justify-between">
+                      <BaseInput
+                        label="Amount"
+                        type="text"
+                        v-model="newBank.amount"
+                      />
+                    </div>
+                    <div class="flex flex-row justify-start">
+                      <BaseSelect
+                        :options="this.options"
+                        v-model="newBank.currency"
+                        label="Select main currency"
+                      />
+                    </div>
+                    <div class="flex flex-row mt-5 justify-around">
+                      <button type="submit"
+                              class="modal-default-button bg-transparent hover:bg-blue-500
+                              text-blue-700 font-semibold hover:text-white py-1 px-2 border
+                              border-blue-500 hover:border-transparent rounded"
+                              @click="showModal=false">
+                        Submit
+                      </button>
+                      <button type="button"
+                              class="modal-default-button bg-transparent hover:bg-blue-500
+                                     text-blue-700 font-semibold hover:text-white py-1 px-2 border
+                                     border-blue-500 hover:border-transparent rounded"
+                              @click="showModal=false">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </template>
+            </BaseForm>
+          </transition>
+        </div>
       </div>
     </div>
   </div>
@@ -167,7 +166,8 @@ export default {
   },
   methods: {
     createNewBank(newBank) {
-      this.$store.commit('ADD_NEW_BANK', { newBank });
+      const date = new Date();
+      this.$store.commit('ADD_NEW_BANK', { newBank, date });
     },
   },
 };
