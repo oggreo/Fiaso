@@ -23,50 +23,52 @@
       </tr>
     </tbody>
   </table>
-  <BaseForm v-if="showModal" @clase="showModal=false">
-    <template v-slot:header>
-      <h3 class="font-semibold"> Update balance </h3>
-    </template>
-    <template v-slot:body>
-      <form
-      >
-        <div class="add-bank-form">
-          <div class="flex flex-row justify-between">
-            <BaseInput
-              label="Date"
-              type="date"
-              v-model="newHistory.newTime"
-            />
+  <transition name="modal">
+    <BaseForm v-if="showModal" @clase="showModal=false">
+      <template v-slot:header>
+        <h3 class="font-semibold"> Update balance </h3>
+      </template>
+      <template v-slot:body>
+        <form
+        >
+          <div class="add-bank-form">
+            <div class="flex flex-row justify-between">
+              <BaseInput
+                label="Date"
+                type="date"
+                v-model="newHistory.newTime"
+              />
+            </div>
+            <div class="flex flex-row justify-between">
+              <BaseInput
+                label="Amount"
+                type="text"
+                v-model="newHistory.newAmount"
+              />
+            </div>
+            <div class="flex flex-row mt-5 justify-around">
+              <button type="button"
+                      class="modal-default-button bg-transparent hover:bg-blue-500
+                              text-blue-700 font-semibold hover:text-white py-1 px-2 border
+                              border-blue-500 hover:border-transparent rounded"
+                      @submit.prevent
+                      @click="showModal=false;
+                              updateHistory(targetCard, selectedHistory, newHistory)">
+                Submit
+              </button>
+              <button type="button"
+                      class="modal-default-button bg-transparent hover:bg-blue-500
+                                     text-blue-700 font-semibold hover:text-white py-1 px-2 border
+                                     border-blue-500 hover:border-transparent rounded"
+                      @click="showModal=false">
+                Cancel
+              </button>
+            </div>
           </div>
-          <div class="flex flex-row justify-between">
-            <BaseInput
-              label="Amount"
-              type="text"
-              v-model="newHistory.newAmount"
-            />
-          </div>
-          <div class="flex flex-row mt-5 justify-around">
-            <button type="button"
-                    class="modal-default-button bg-transparent hover:bg-blue-500
-                            text-blue-700 font-semibold hover:text-white py-1 px-2 border
-                            border-blue-500 hover:border-transparent rounded"
-                    @submit.prevent
-                    @click="showModal=false;
-                            updateHistory(targetCard, selectedHistory, newHistory)">
-              Submit
-            </button>
-            <button type="button"
-                    class="modal-default-button bg-transparent hover:bg-blue-500
-                                   text-blue-700 font-semibold hover:text-white py-1 px-2 border
-                                   border-blue-500 hover:border-transparent rounded"
-                    @click="showModal=false">
-              Cancel
-            </button>
-          </div>
-        </div>
-      </form>
-    </template>
-  </BaseForm>
+        </form>
+      </template>
+    </BaseForm>
+  </transition>
 </template>
 
 <script>

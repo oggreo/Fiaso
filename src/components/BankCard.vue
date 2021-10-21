@@ -247,6 +247,13 @@ export default {
         this.rate = response.data.result;
         const convertedAmount = this.latest.amount * this.rate;
         this.convertedAmount = (Math.round(convertedAmount * 100) / 100).toFixed(2);
+        for (let i = 0; i < this.GStore.length; i += 1) {
+          const card = this.GStore[i];
+          if (card.id === this.card.id) {
+            this.GStore.splice(i, 1);
+            break;
+          }
+        }
         this.GStore.push({
           id: this.card.id,
           convertedAmount: this.convertedAmount,

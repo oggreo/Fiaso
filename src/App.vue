@@ -1,9 +1,15 @@
 <template>
-  <div class="ml-10 mr-10 mt-5 mb-5 navbar flex border-solid border-b-2 border-light-blue-200">
-    <h1 class="pb-2 text-2xl font-black leading-7 text-gray-900 sm:text-3xl sm:truncate">Viaso</h1>
-  </div>
+  <NavBar></NavBar>
   <router-view/>
 </template>
+
+<script>
+import NavBar from './components/NavBar';
+
+export default {
+  components: { NavBar },
+};
+</script>
 
 <style>
 #app {
@@ -25,5 +31,15 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
 }
 </style>

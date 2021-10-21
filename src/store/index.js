@@ -8,13 +8,25 @@ export default createStore({
   plugins: [saveStatePlugin],
   state: {
     balance,
+    user: {
+      loggedIn: false,
+      data: null,
+    },
+  },
+  getters: {
+    user(state) {
+      return state.user;
+    },
   },
   mutations: {
+    SET_LOGGED_IN(state, isLoggedIn) {
+      state.user.loggedIn = isLoggedIn;
+    },
+    SET_USER(state, userData) {
+      state.user.data = userData;
+    },
     ADD_HISTORY(state, { targetCard, newHistory }) {
-      console.log('targetCard', targetCard);
-      console.log('state.balance.cards', state.balance.cards);
       const targetIndex = state.balance.cards.findIndex((card) => card.id === targetCard.id);
-      console.log('targetIndex', targetIndex);
       state.balance.cards[targetIndex].history.push(newHistory);
     },
     UPDATE_HISTORY(state, { targetCard, oldHistory, updatedHistory }) {
@@ -48,6 +60,17 @@ export default createStore({
     },
   },
   actions: {
+    getUser({ commit }, user) {
+      commit('SET_LOGGED_IN', user !== null);
+      if (user) {
+        commit('SET_USER', {
+          displayName: user.displayName,
+          email: user.email,
+        });
+      } else {
+        commit('SET_USER', null);
+      }
+    },
   },
   modules: {
   },

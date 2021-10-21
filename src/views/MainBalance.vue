@@ -1,8 +1,13 @@
 <template>
   <div class="account-main flex flex-col space-between ml-10 mr-10">
     <div class="greeting flex flex-row justify-between">
-      <h1 class="mb-5 pb-2 text-2xl font-black leading-7 text-gray-900 sm:text-3xl sm:truncate">
-        Welcome back!👋
+      <h1 v-if="user.data"
+          class="mb-5 pb-2 text-2xl font-black leading-7 text-gray-900 sm:text-3xl sm:truncate">
+          Hi! {{ displayName }}👋
+      </h1>
+      <h1 v-else
+          class="mb-5 pb-2 text-2xl font-black leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        Demo👋
       </h1>
       <div class="select-main-currency">
         <BaseSelect
@@ -83,6 +88,7 @@
       </div>
     </div>
   </div>
+
   <div class="balance">
     <BankCard
       class="card"
@@ -96,7 +102,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
+import { getAuth } from 'firebase/auth';
+import { gsap } from 'gsap';
 import BankCard from '../components/BankCard';
 import BaseInput from '../components/BaseInput';
 import BaseForm from '../components/BaseForm';
@@ -107,6 +115,8 @@ export default {
   inject: ['GStore'],
   data() {
     return {
+      tweenedTotal: 0,
+      displayName: null,
       mainCurrency: 'GBP',
       newBank: {
         name: '',
@@ -122,13 +132,44 @@ export default {
       showModal: false,
     };
   },
+  updated() {
+    // Code that will run only after the
+    // entire view has been re-rendered
+    this.$nextTick(function () {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user !== null) {
+        this.displayName = user.displayName;
+      }
+    });
+  },
   components: {
     BaseInput,
     BankCard,
     BaseForm,
     BaseSelect,
   },
+  // watch: {
+  //   mainCurrency() {
+  //     let total = 0;
+  //     this.GStore.forEach(
+  //       (card) => {
+  //         total += parseFloat(card.convertedAmount);
+  //       },
+  //     );
+  //     total = (Math.round(total * 100) / 100).toFixed(2);
+  //     total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  //     gsap.to(this.$data, {
+  //       duration: 0.3,
+  //       ease: 'circ.out',
+  //       tweenedTotal: total,
+  //     });
+  //   },
+  // },
   computed: {
+    ...mapGetters({
+      user: 'user',
+    }),
     ...mapState(['balance']),
     getCurrentDateTime() {
       return new Date().toLocaleDateString();
@@ -140,8 +181,16 @@ export default {
           total += parseFloat(card.convertedAmount);
         },
       );
-      total = (Math.round(total * 100) / 100).toFixed(2);
-      return total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      total = total.toFixed(2);
+      gsap.to(this.$data, {
+        duration: 0.3,
+        ease: 'circ.out',
+        tweenedTotal: total,
+      });
+
+      total = (Math.round(this.tweenedTotal * 100) / 100).toFixed(2);
+      total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return total;
     },
     getCurrencySymbol() {
       let symbol = '';
@@ -191,15 +240,4 @@ export default {
  * You can easily play with the modal transition by editing
  * these styles.
  */
-
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
 </style>
