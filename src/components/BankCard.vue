@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import CurrencyExchangeServices from '../services/CurrencyExchangeServices';
 import AccountTable from './AccountTable';
 import BaseForm from './BaseForm';
@@ -114,7 +115,6 @@ import BaseInput from './BaseInput';
 
 export default {
   name: 'BankCard',
-  inject: ['GStore'],
   components: {
     AccountTable,
     BaseForm,
@@ -146,16 +146,9 @@ export default {
           this.rate = response.data.result;
           const convertedAmount = this.latest.amount * this.rate;
           this.convertedAmount = (Math.round(convertedAmount * 100) / 100).toFixed(2);
-          for (let i = 0; i < this.GStore.length; i += 1) {
-            const card = this.GStore[i];
-            if (card.id === this.card.id) {
-              this.GStore.splice(i, 1);
-              break;
-            }
-          }
-          this.GStore.push({
-            id: this.card.id,
-            convertedAmount: this.convertedAmount,
+          this.$store.commit('UPDATE_CONVERTED_AMOUNTS', {
+            targetId: this.card.id,
+            newAmount: this.convertedAmount,
           });
         })
         .catch((error) => {
@@ -178,16 +171,9 @@ export default {
           this.rate = response.data.result;
           const convertedAmount = this.latest.amount * this.rate;
           this.convertedAmount = (Math.round(convertedAmount * 100) / 100).toFixed(2);
-          for (let i = 0; i < this.GStore.length; i += 1) {
-            const card = this.GStore[i];
-            if (card.id === this.card.id) {
-              this.GStore.splice(i, 1);
-              break;
-            }
-          }
-          this.GStore.push({
-            id: this.card.id,
-            convertedAmount: this.convertedAmount,
+          this.$store.commit('UPDATE_CONVERTED_AMOUNTS', {
+            targetId: this.card.id,
+            newAmount: this.convertedAmount,
           });
         })
         .catch((error) => {
@@ -205,12 +191,8 @@ export default {
       this.$store.commit('ADD_HISTORY', { targetCard, newHistory: updatedHistory });
     },
     deleteBank(id) {
-      for (let i = 0; i < this.GStore.length; i += 1) {
-        const card = this.GStore[i];
-        if (card.id === this.card.id) {
-          this.GStore.splice(i, 1);
-        }
-      }
+      console.log('id', id);
+      this.$store.commit('DELETE_CONVERTED_AMOUNTS', { targetId: id });
       this.$store.commit('DELETE_BANK', { id });
     },
   },
@@ -247,16 +229,9 @@ export default {
         this.rate = response.data.result;
         const convertedAmount = this.latest.amount * this.rate;
         this.convertedAmount = (Math.round(convertedAmount * 100) / 100).toFixed(2);
-        for (let i = 0; i < this.GStore.length; i += 1) {
-          const card = this.GStore[i];
-          if (card.id === this.card.id) {
-            this.GStore.splice(i, 1);
-            break;
-          }
-        }
-        this.GStore.push({
-          id: this.card.id,
-          convertedAmount: this.convertedAmount,
+        this.$store.commit('UPDATE_CONVERTED_AMOUNTS', {
+          targetId: this.card.id,
+          newAmount: convertedAmount,
         });
       })
       .catch((error) => {
@@ -264,6 +239,9 @@ export default {
       });
   },
   computed: {
+    ...mapState({
+      convertedAmounts: 'convertedAmounts',
+    }),
     getBankBalance() {
       // get the latest record from cards history
       let latest = this.card.history[0];

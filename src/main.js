@@ -1,12 +1,10 @@
-import { createApp, reactive } from 'vue';
+import { createApp } from 'vue';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import App from './App.vue';
 import router from './router';
 import store from './store';
 import './assets/tailwind.css';
-
-const GStore = reactive([]);
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCGZZiPmLcNaMSkLITXBKz4R4tOtyzK4Rw',
@@ -32,7 +30,6 @@ onAuthStateChanged(auth, (user) => {
 });
 
 createApp(App)
-  .provide('GStore', GStore)
   .use(store)
   .use(router)
   .mount('#app');

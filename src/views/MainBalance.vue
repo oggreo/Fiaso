@@ -112,7 +112,6 @@ import BaseSelect from '../components/BaseSelect';
 
 export default {
   name: 'MainBalance',
-  inject: ['GStore'],
   data() {
     return {
       tweenedTotal: 0,
@@ -149,37 +148,22 @@ export default {
     BaseForm,
     BaseSelect,
   },
-  // watch: {
-  //   mainCurrency() {
-  //     let total = 0;
-  //     this.GStore.forEach(
-  //       (card) => {
-  //         total += parseFloat(card.convertedAmount);
-  //       },
-  //     );
-  //     total = (Math.round(total * 100) / 100).toFixed(2);
-  //     total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  //     gsap.to(this.$data, {
-  //       duration: 0.3,
-  //       ease: 'circ.out',
-  //       tweenedTotal: total,
-  //     });
-  //   },
-  // },
   computed: {
     ...mapGetters({
       user: 'user',
     }),
-    ...mapState(['balance']),
+    ...mapState({
+      balance: 'balance',
+      convertedAmounts: 'convertedAmounts',
+    }),
     getCurrentDateTime() {
       return new Date().toLocaleDateString();
     },
     getCurrentTotal() {
       let total = 0;
-      this.GStore.forEach(
+      this.convertedAmounts.forEach(
         (card) => {
           total += parseFloat(card.convertedAmount);
-          console.log('card.convertedAmount', card.convertedAmount);
         },
       );
       total = total.toFixed(2);

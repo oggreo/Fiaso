@@ -10,6 +10,7 @@ const balance = JSON.parse(localStorage.getItem('balance')) || defaultBalance;
 export default createStore({
   plugins: [saveStatePlugin],
   state: {
+    convertedAmounts: [],
     balance,
     user: {
       loggedIn: false,
@@ -26,6 +27,32 @@ export default createStore({
     },
   },
   mutations: {
+    DELETE_CONVERTED_AMOUNTS(state, { targetId }) {
+      console.log('targetId', targetId);
+      for (let i = 0; i < state.convertedAmounts.length; i += 1) {
+        const card = state.convertedAmounts[i];
+        if (card.id === targetId) {
+          console.log('targetId 2', targetId);
+          state.convertedAmounts.splice(i, 1);
+        }
+      }
+    },
+    UPDATE_CONVERTED_AMOUNTS(state, { targetId, newAmount }) {
+      for (let i = 0; i < state.convertedAmounts.length; i += 1) {
+        const card = state.convertedAmounts[i];
+        if (card.id === targetId) {
+          state.convertedAmounts.splice(i, 1);
+          break;
+        }
+      }
+      state.convertedAmounts.push({
+        id: targetId,
+        convertedAmount: newAmount,
+      });
+    },
+    INIT_CONVERTED_AMOUNTS(state) {
+      state.convertedAmounts = [];
+    },
     SET_LOGGED_IN(state, isLoggedIn) {
       state.user.loggedIn = isLoggedIn;
     },
@@ -42,7 +69,6 @@ export default createStore({
       const db = getDatabase();
       const userData = ref(db, `userData/${uid}`);
       if (userData) {
-        console.log('userData exists', userData);
         onValue(userData, (snapshot) => {
           const storedBalance = snapshot.val();
           if (storedBalance) {

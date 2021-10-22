@@ -70,9 +70,8 @@ export default {
         .then((userData) => {
           // load user board from firebase
           const { uid } = userData.user;
-          this.$store.commit('SET_USER_STORED_DATA', {
-            uid,
-          });
+          this.$store.commit('INIT_CONVERTED_AMOUNTS');
+          this.$store.commit('SET_USER_STORED_DATA', { uid });
           this.$router.push({ name: 'MainBalance' });
         })
         .catch((err) => {

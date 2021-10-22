@@ -10,13 +10,15 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex';
 import { getAuth, signOut } from 'firebase/auth';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'NavBar',
-  inject: ['GStore'],
   computed: {
+    ...mapState({
+      convertedAmounts: 'convertedAmounts',
+    }),
     ...mapGetters({
       user: 'user',
     }),
@@ -27,7 +29,7 @@ export default {
       signOut(auth).then(() => {
         // Sign-out successful.
         // initialise storage.
-        this.GStore = [];
+        this.$store.commit('INIT_CONVERTED_AMOUNTS');
         this.$store.commit('SET_DEFAULT_DATA');
       }).catch((error) => {
         console.log('error', error);
