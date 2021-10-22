@@ -65,15 +65,18 @@ export default {
   },
   methods: {
     login() {
-      console.log(this.email);
-      console.log(this.password);
       const auth = getAuth();
       signInWithEmailAndPassword(auth, this.email, this.password)
-        .then(() => {
+        .then((userData) => {
+          // load user board from firebase
+          const { uid } = userData.user;
+          this.$store.commit('SET_USER_STORED_DATA', {
+            uid,
+          });
           this.$router.push({ name: 'MainBalance' });
         })
         .catch((err) => {
-          this.error = err.response.data.error;
+          console.log('err', err);
         });
     },
   },

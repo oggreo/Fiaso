@@ -179,6 +179,7 @@ export default {
       this.GStore.forEach(
         (card) => {
           total += parseFloat(card.convertedAmount);
+          console.log('card.convertedAmount', card.convertedAmount);
         },
       );
       total = total.toFixed(2);

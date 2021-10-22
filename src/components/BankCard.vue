@@ -53,7 +53,7 @@
                              text-blue-700 font-semibold hover:text-white py-1 px-2 border
                              border-blue-500 hover:border-transparent rounded"
                       @click="showModal=false">
-                Cancel
+                Done
               </button>
             </div>
           </template>

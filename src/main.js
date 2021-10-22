@@ -11,6 +11,7 @@ const GStore = reactive([]);
 const firebaseConfig = {
   apiKey: 'AIzaSyCGZZiPmLcNaMSkLITXBKz4R4tOtyzK4Rw',
   authDomain: 'fiaso-80806.firebaseapp.com',
+  databaseURL: 'https://fiaso-80806-default-rtdb.europe-west1.firebasedatabase.app',
   projectId: 'fiaso-80806',
   storageBucket: 'fiaso-80806.appspot.com',
   messagingSenderId: '84629356338',

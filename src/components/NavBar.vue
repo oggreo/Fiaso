@@ -28,6 +28,7 @@ export default {
         // Sign-out successful.
         // initialise storage.
         this.GStore = [];
+        this.$store.commit('SET_DEFAULT_DATA');
       }).catch((error) => {
         console.log('error', error);
         // An error happened.

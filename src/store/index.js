@@ -1,6 +1,9 @@
 import { createStore } from 'vuex';
-import defaultBalance from '../default-balance';
+import {
+  getDatabase, ref, set, onValue,
+} from 'firebase/database';
 import { uuid, saveStatePlugin } from '../utils';
+import defaultBalance from '../default-balance';
 
 const balance = JSON.parse(localStorage.getItem('balance')) || defaultBalance;
 
@@ -11,11 +14,15 @@ export default createStore({
     user: {
       loggedIn: false,
       data: null,
+      uid: null,
     },
   },
   getters: {
     user(state) {
       return state.user;
+    },
+    userId(state) {
+      return state.user.uid;
     },
   },
   mutations: {
@@ -24,10 +31,40 @@ export default createStore({
     },
     SET_USER(state, userData) {
       state.user.data = userData;
+      if (userData) {
+        state.user.uid = userData.uid;
+      }
+    },
+    SET_DEFAULT_DATA(state) {
+      state.balance = defaultBalance;
+    },
+    SET_USER_STORED_DATA(state, { uid }) {
+      const db = getDatabase();
+      const userData = ref(db, `userData/${uid}`);
+      if (userData) {
+        console.log('userData exists', userData);
+        onValue(userData, (snapshot) => {
+          const storedBalance = snapshot.val();
+          if (storedBalance) {
+            state.balance = storedBalance;
+          } else {
+            // write to fireBase
+            set(ref(db, `userData/${uid}`), {
+              cards: state.balance.cards,
+            });
+          }
+        });
+      }
     },
     ADD_HISTORY(state, { targetCard, newHistory }) {
       const targetIndex = state.balance.cards.findIndex((card) => card.id === targetCard.id);
       state.balance.cards[targetIndex].history.push(newHistory);
+      // write to fireBase
+      const db = getDatabase();
+      const uid = state.user.uid.toString();
+      set(ref(db, `userData/${uid}`), {
+        cards: state.balance.cards,
+      });
     },
     UPDATE_HISTORY(state, { targetCard, oldHistory, updatedHistory }) {
       // update history
@@ -39,9 +76,15 @@ export default createStore({
       targetIndex = state.balance.cards.findIndex((card) => card.id === targetCard.id);
       // it needs to replace the original position here
       state.balance.cards.splice(targetIndex, 1, newCard);
+      // write to fireBase
+      const db = getDatabase();
+      const uid = state.user.uid.toString();
+      set(ref(db, `userData/${uid}`), {
+        cards: state.balance.cards,
+      });
     },
     ADD_NEW_BANK(state, { newBank, date }) {
-      state.balance.cards.push({
+      const formattedNewBank = {
         name: newBank.name,
         currency: newBank.currency,
         id: uuid(),
@@ -52,11 +95,24 @@ export default createStore({
             timeStamp: Date.now(),
             amount: newBank.amount,
           }],
+      };
+      state.balance.cards.push(formattedNewBank);
+      // write to fireBase
+      const db = getDatabase();
+      const uid = state.user.uid.toString();
+      set(ref(db, `userData/${uid}`), {
+        cards: state.balance.cards,
       });
     },
     DELETE_BANK(state, { id }) {
       const targetIndex = state.balance.cards.findIndex((card) => card.id === id);
       state.balance.cards.splice(targetIndex, 1);
+      // write to fireBase
+      const db = getDatabase();
+      const uid = state.user.uid.toString();
+      set(ref(db, `userData/${uid}`), {
+        cards: state.balance.cards,
+      });
     },
   },
   actions: {
@@ -66,6 +122,7 @@ export default createStore({
         commit('SET_USER', {
           displayName: user.displayName,
           email: user.email,
+          uid: user.uid,
         });
       } else {
         commit('SET_USER', null);
