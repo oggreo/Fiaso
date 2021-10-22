@@ -2,13 +2,12 @@ import { createStore } from 'vuex';
 import {
   getDatabase, ref, set, onValue,
 } from 'firebase/database';
-import { uuid, saveStatePlugin } from '../utils';
+import { uuid } from '../utils';
 import defaultBalance from '../default-balance';
 
 const balance = JSON.parse(localStorage.getItem('balance')) || defaultBalance;
 
 export default createStore({
-  plugins: [saveStatePlugin],
   state: {
     convertedAmounts: [],
     balance,
@@ -51,6 +50,7 @@ export default createStore({
       });
     },
     INIT_CONVERTED_AMOUNTS(state) {
+      // console.log('initting convertedAmounts');
       state.convertedAmounts = [];
     },
     SET_LOGGED_IN(state, isLoggedIn) {

@@ -21,6 +21,7 @@
     "luxon": "^2.0.2",
     "postcss": "^7",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
+    "vee-validate": "^4.5.4",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue-select": "^3.13.3",
