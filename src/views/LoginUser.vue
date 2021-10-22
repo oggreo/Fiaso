@@ -65,13 +65,17 @@ export default {
   },
   methods: {
     login() {
+      this.$store.commit('INIT_CONVERTED_AMOUNTS');
       const auth = getAuth();
       signInWithEmailAndPassword(auth, this.email, this.password)
         .then((userData) => {
           // load user board from firebase
           const { uid } = userData.user;
-          this.$store.commit('INIT_CONVERTED_AMOUNTS');
-          this.$store.commit('SET_USER_STORED_DATA', { uid });
+          //  this.$store.commit('SET_USER_STORED_DATA', { uid });
+          this.$store.commit('INIT_BALANCE');
+          return this.$store.dispatch('getUserData', { uid });
+        })
+        .then(() => {
           this.$router.push({ name: 'MainBalance' });
         })
         .catch((err) => {

@@ -131,6 +131,11 @@ export default {
       showModal: false,
     };
   },
+  // beforeRouteEnter(to, from, next) {
+  //   next((comp) => {
+  //     comp.$store.commit('INIT_CONVERTED_AMOUNTS');
+  //   });
+  // },
   updated() {
     // Code that will run only after the
     // entire view has been re-rendered

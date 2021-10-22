@@ -146,6 +146,7 @@ export default {
           this.rate = response.data.result;
           const convertedAmount = this.latest.amount * this.rate;
           this.convertedAmount = (Math.round(convertedAmount * 100) / 100).toFixed(2);
+          console.log('watch card');
           this.$store.commit('UPDATE_CONVERTED_AMOUNTS', {
             targetId: this.card.id,
             newAmount: this.convertedAmount,
@@ -229,6 +230,7 @@ export default {
         this.rate = response.data.result;
         const convertedAmount = this.latest.amount * this.rate;
         this.convertedAmount = (Math.round(convertedAmount * 100) / 100).toFixed(2);
+        console.log('created');
         this.$store.commit('UPDATE_CONVERTED_AMOUNTS', {
           targetId: this.card.id,
           newAmount: convertedAmount,

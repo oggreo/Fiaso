@@ -5,12 +5,12 @@ import {
 import { uuid } from '../utils';
 import defaultBalance from '../default-balance';
 
-const balance = JSON.parse(localStorage.getItem('balance')) || defaultBalance;
+// const balance = defaultBalance;
 
 export default createStore({
   state: {
     convertedAmounts: [],
-    balance,
+    balance: defaultBalance,
     user: {
       loggedIn: false,
       data: null,
@@ -27,27 +27,26 @@ export default createStore({
   },
   mutations: {
     DELETE_CONVERTED_AMOUNTS(state, { targetId }) {
-      console.log('targetId', targetId);
       for (let i = 0; i < state.convertedAmounts.length; i += 1) {
         const card = state.convertedAmounts[i];
         if (card.id === targetId) {
-          console.log('targetId 2', targetId);
           state.convertedAmounts.splice(i, 1);
         }
       }
     },
     UPDATE_CONVERTED_AMOUNTS(state, { targetId, newAmount }) {
+      console.log('state.convertedAmounts b4', state.convertedAmounts);
       for (let i = 0; i < state.convertedAmounts.length; i += 1) {
         const card = state.convertedAmounts[i];
         if (card.id === targetId) {
           state.convertedAmounts.splice(i, 1);
-          break;
         }
       }
       state.convertedAmounts.push({
         id: targetId,
         convertedAmount: newAmount,
       });
+      console.log('state.convertedAmounts aft', state.convertedAmounts);
     },
     INIT_CONVERTED_AMOUNTS(state) {
       // console.log('initting convertedAmounts');
@@ -65,6 +64,9 @@ export default createStore({
     SET_DEFAULT_DATA(state) {
       state.balance = defaultBalance;
     },
+    INIT_BALANCE(state) {
+      state.balance = {};
+    },
     SET_USER_STORED_DATA(state, { uid }) {
       const db = getDatabase();
       const userData = ref(db, `userData/${uid}`);
@@ -72,6 +74,7 @@ export default createStore({
         onValue(userData, (snapshot) => {
           const storedBalance = snapshot.val();
           if (storedBalance) {
+            console.log('storedBalance', storedBalance);
             state.balance = storedBalance;
           } else {
             // write to fireBase
@@ -142,6 +145,13 @@ export default createStore({
     },
   },
   actions: {
+    getUserData({ commit }, uid) {
+      // eslint-disable-next-line no-unused-vars
+      return new Promise((resolve, reject) => {
+        commit('SET_USER_STORED_DATA', uid);
+        resolve();
+      });
+    },
     getUser({ commit }, user) {
       commit('SET_LOGGED_IN', user !== null);
       if (user) {
