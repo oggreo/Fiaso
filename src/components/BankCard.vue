@@ -146,7 +146,6 @@ export default {
           this.rate = response.data.result;
           const convertedAmount = this.latest.amount * this.rate;
           this.convertedAmount = (Math.round(convertedAmount * 100) / 100).toFixed(2);
-          console.log('watch card');
           this.$store.commit('UPDATE_CONVERTED_AMOUNTS', {
             targetId: this.card.id,
             newAmount: this.convertedAmount,
@@ -192,7 +191,6 @@ export default {
       this.$store.commit('ADD_HISTORY', { targetCard, newHistory: updatedHistory });
     },
     deleteBank(id) {
-      console.log('id', id);
       this.$store.commit('DELETE_CONVERTED_AMOUNTS', { targetId: id });
       this.$store.commit('DELETE_BANK', { id });
     },

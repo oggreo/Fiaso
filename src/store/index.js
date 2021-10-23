@@ -4,8 +4,7 @@ import {
 } from 'firebase/database';
 import { uuid } from '../utils';
 import defaultBalance from '../default-balance';
-
-// const balance = defaultBalance;
+import exampleBalance from '../example-balance';
 
 export default createStore({
   state: {
@@ -35,7 +34,6 @@ export default createStore({
       }
     },
     UPDATE_CONVERTED_AMOUNTS(state, { targetId, newAmount }) {
-      console.log('state.convertedAmounts b4', state.convertedAmounts);
       for (let i = 0; i < state.convertedAmounts.length; i += 1) {
         const card = state.convertedAmounts[i];
         if (card.id === targetId) {
@@ -46,7 +44,6 @@ export default createStore({
         id: targetId,
         convertedAmount: newAmount,
       });
-      console.log('state.convertedAmounts aft', state.convertedAmounts);
     },
     INIT_CONVERTED_AMOUNTS(state) {
       // console.log('initting convertedAmounts');
@@ -74,12 +71,12 @@ export default createStore({
         onValue(userData, (snapshot) => {
           const storedBalance = snapshot.val();
           if (storedBalance) {
-            console.log('storedBalance', storedBalance);
             state.balance = storedBalance;
           } else {
             // write to fireBase
+            // firebase cannot store empty arrays so it needs to be initialised with something
             set(ref(db, `userData/${uid}`), {
-              cards: state.balance.cards,
+              cards: exampleBalance.cards,
             });
           }
         });
