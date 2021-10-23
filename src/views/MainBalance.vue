@@ -131,11 +131,18 @@ export default {
       showModal: false,
     };
   },
-  // beforeRouteEnter(to, from, next) {
-  //   next((comp) => {
-  //     comp.$store.commit('INIT_CONVERTED_AMOUNTS');
-  //   });
-  // },
+  mounted() {
+    this.$nextTick(function () {
+    // Code that will run only after the
+    // entire view has been rendered
+      console.log('this.$store', this.$store);
+      console.log('this.$store.user', this.$store.getters.user);
+      if (this.$store.getters.user.loggedIn) {
+        console.log('is in!');
+        // this.$store.commit('SET_USER_STORED_DATA', this.$store.getters.user.uid);
+      }
+    });
+  },
   updated() {
     // Code that will run only after the
     // entire view has been re-rendered

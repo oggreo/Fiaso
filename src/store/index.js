@@ -2,14 +2,18 @@ import { createStore } from 'vuex';
 import {
   getDatabase, ref, set, onValue,
 } from 'firebase/database';
-import { uuid } from '../utils';
+import { uuid, saveStatePlugin } from '../utils';
 import defaultBalance from '../default-balance';
 import exampleBalance from '../example-balance';
 
+// vuex doesn't persist state when refresh so state needs to be stored in localstorage
+const balance = JSON.parse(localStorage.getItem('balance')) || defaultBalance;
+
 export default createStore({
+  plugins: [saveStatePlugin],
   state: {
     convertedAmounts: [],
-    balance: defaultBalance,
+    balance,
     user: {
       loggedIn: false,
       data: null,
@@ -59,6 +63,7 @@ export default createStore({
       }
     },
     SET_DEFAULT_DATA(state) {
+      console.log('is this being called ?');
       state.balance = defaultBalance;
     },
     INIT_BALANCE(state) {
